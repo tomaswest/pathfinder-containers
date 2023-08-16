@@ -101,9 +101,11 @@ A fork of techfreak's [Pathfinder-container](https://gitlab.com/techfreak/pathfi
    * Once the page has reloaded, click the **"setup tables"**, and then **"fix columns/keys"**.
 </br></br>
 
-1. **Go back to your console and insert the eve universe dump with this command:**
+1. **Go back to your console and insert the eve universe dump with this commands:**
     ```shell
-    docker-compose exec pfdb /bin/sh -c "unzip -p eve_universe.sql.zip | mysql -u root -p\$MYSQL_ROOT_PASSWORD eve_universe";
+    docker-compose exec pfdb /bin/sh -c "apt update" && /
+    docker-compose exec pfdb /bin/sh -c "apt install unzip" && /
+    docker-compose exec pfdb /bin/sh -c "unzip -p eve_universe.sql.zip | mariadb -u root -p\$MYSQL_ROOT_PASSWORD eve_universe";
 
 1. **When everthing works, configure Traefik correctly for production**
     * Remove the staging CA server line [(#89)](https://github.com/goryn-clade/pathfinder-containers/blob/master/docker-compose.yml#L89) from `docker-compose.yml`. 

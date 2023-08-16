@@ -3,7 +3,6 @@ version: "3.8"
 services:
   pfdb:
     image: mariadb:latest
-    container_name: "pathfinder-mariadb"
     environment:
       MARIADB_ROOT_PASSWORD: $MYSQL_PASSWORD
       MARIADB_AUTO_UPGRADE: "1"
@@ -19,7 +18,7 @@ services:
   pf-redis:
     image: redis:6.2.13-alpine3.18
     command: ["redis-server", "--appendonly", "yes"]
-    container_name: "pathfinder-redis"
+    hostname: redis
     volumes:
       - redis_data:/data
     networks:
@@ -32,14 +31,14 @@ services:
   pf-socket:
     image: ghcr.io/goryn-clade/pf-websocket:latest
     command: ["--tcpHost", "0.0.0.0"]
-    container_name: "pathfinder-socket"
+    hostname: socket
     networks:
       pf:
          aliases:
            - "$PATHFINDER_SOCKET_HOST"
     restart: always
   pf:
-    container_name: "pathfinder"
+    hostname: "pathfinder"
     image: westtom/pathfinder:latest
     env_file:
     - .env
@@ -71,8 +70,8 @@ services:
       - pf-socket
     restart: always
   traefik:
-    image: "traefik:v3.0"
-    container_name: "pathfinder-traefik"
+    image: "traefik:latest"
+    container_name: "traefik"
     command:
       # Tell Traefik to discover containers using the Docker API
       - --providers.docker=true
